@@ -32,7 +32,7 @@ details, see, e.g., section 3.7 of [this book](https://mpsibook.github.io).
 
 ```{r}
 k     <- 100000
-y.obs <- 21500
+y.obs <- 56341
 f <- function(p,k,y.obs,q) { # return value of F_Y(.) - q
   pbinom(y.obs,size=k,prob=p) - q
 }
