@@ -1,0 +1,46 @@
+---
+title: "Confidence Interval for Multinomial p-Value"
+output: html_document
+author: "Peter E. Freeman - Carnegie Mellon University"
+---
+
+The setting: you have run a set of multinomial simulations given
+
+1. an observed data vector (e.g., $\{1,5,4,4,6,4\}$, representing the number
+of times each face is observed in $k = 24$ tosses of a six-sided die); and
+2. a stated null hypothesis (e.g., $p_1 = \cdots = p_6 = 1/6$, or, is the
+die a fair one?).
+
+Let assume you have run $100,000$ simulations and that the number of probability mass function values that are smaller than what you observe is 56,341. Thus 
+your estimated $p$-value is $56,341/100,000 = 0.56341$...but how uncertain is this?
+
+We can use the observed proportion to generate an exact binomial confidence
+interval, using the following code. (Note that using this code is equivalent to
+computing a Clopper-Pearson interval.) What the code is doing is solving the
+following equation for the binomial proportion $p$:
+\begin{align*}
+F_Y(y_{\rm obs} \vert k,p) - q = 0 \,,
+\end{align*}
+where $Y$ is our statistic (here, the number of "successes"), 
+$F_Y(\cdot)$ is the cumulative distribution function for $Y$ (here,
+a binomial distribution), $y_{\rm obs}$ is the
+observed value (here, $56,341$), $k$ is the number of trials (here, $100,000$), and
+$q$ is an appropriate cumulative distribution function value (e.g.,
+$q = 0.975$ when computing the lower bound for a 95% confidence interval
+on the $p$-value, and $q=0.025$ when computing the upper bound). For more
+details, see, e.g., section 3.7 of [this book](https://mpsibook.github.io).
+
+```{r}
+k     <- 100000
+y.obs <- 21500
+f <- function(p,k,y.obs,q) { # return value of F_Y(.) - q
+  pbinom(y.obs,size=k,prob=p) - q
+}
+# given y.obs, k, and q, solve for p
+p.lo <- uniroot(f,interval=c(0,1),k=k,y.obs=y.obs-1,q=0.975)$root
+p.hi <- uniroot(f,interval=c(0,1),k=k,y.obs=y.obs  ,q=0.025)$root
+
+cat("The 95% confidence interval is [",round(p.lo,4),",",round(p.hi,4),"]\n",sep="")
+```
+
+Note that in the first call to `uniroot()`, we apply a necessary "discreteness correction" to the input value `y.obs` so as to get the correct lower bound.
