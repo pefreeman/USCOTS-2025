@@ -1,0 +1,66 @@
+---
+title: "Are p-Values Uniformly Distributed Under the Null?"
+output: html_document
+author: "Peter E. Freeman - Carnegie Mellon University"
+---
+
+The setting: you wish to determine if the $p$-values that arise from
+the chi-square goodness of fit test and from multinomial simulations
+are uniformly distributed, which you would expect them to be if the null
+hypothesis is correct.
+
+```{r}
+k <- 30
+m <- 6
+p <- rep(1/m,m)
+set.seed(101)
+
+num.rep <- 1000
+p.chi   <- rep(NA,num.rep)
+p.mult  <- rep(NA,num.rep)
+num.sim <- 1000
+
+for ( ii in 1:num.rep ) {
+  X.obs       <- rmultinom(1,k,p)
+  W           <- sum((X.obs-k*p)^2/(k*p))
+  p.chi[ii]   <- 1 - pchisq(W,m-1)
+  obs         <- dmultinom(X.obs,prob=p)
+  X           <- rmultinom(num.sim,k,p)
+  a           <- apply(X,2,function(x,p){dmultinom(x,prob=p)},p=p)
+  p.mult[ii]  <- sum(a<=obs)/num.sim
+}
+
+df <- data.frame(p.chi,p.mult)
+```
+
+To determine if the $p$-values arising from repeated applications of
+the chi-square goodness of fit test are uniformly distributed, we apply
+the Kolmogorov-Smirnov test.
+
+```{r fig.align='center',fig.width=4,fig.height=4}
+library(ggplot2)
+
+ggplot(data=df,mapping=aes(x=p.chi,y=after_stat(density))) +
+  geom_histogram(fill="dodgerblue",bins=25) +
+  geom_hline(yintercept=1,col="firebrick1",lty=2) +
+  xlab("p-Value - Chi-Square Goodness of Fit Test")
+
+cat("KS test p-value:",suppressWarnings(ks.test(p.chi,"punif"))$p.value,"\n")
+```
+
+```{r fig.align='center',fig.width=4,fig.height=4}
+library(ggplot2)
+
+ggplot(data=df,mapping=aes(x=p.mult,y=after_stat(density))) +
+  geom_histogram(fill="dodgerblue",bins=25) +
+  geom_hline(yintercept=1,col="firebrick1",lty=2) +
+  xlab("p-Value - Multinomial Simulations")
+
+cat("KS test p-value:",suppressWarnings(ks.test(p.mult,"punif"))$p.value,"\n")
+```
+
+We observe that in the low-count regime, where the approximations underpinning 
+the chi-square goodness-of-fit test rapidly break down, we reject the null
+hypothesis that the $p$-values from the chi-square goodness-of-fit test are
+uniformly distributed, while for the multinomial simulations, we fail to reject
+the null.
