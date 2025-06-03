@@ -9,8 +9,8 @@ of fit test and conduct multinomial simulations, under the null hypothesis
 that the die is fair?
 
 2. `CI_Multinomial.Rmd`: given the results of a set of multinomial simulations
-(an estimated $p$-value), can we construct a 95% confidence interval on the true
-$p$-value? (Short answer: yes.)
+(an estimated $p$-value), can we construct a 95% confidence interval for the 
+true $p$-value? (Short answer: yes.)
 
 3. `P_Value_Uniformity.Rmd`: are the $p$-values that arise when we perform 
 the chi-square goodness of fit test and conduct multinomial simulations, 
