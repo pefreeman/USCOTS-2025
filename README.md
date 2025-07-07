@@ -23,5 +23,5 @@ test; rather, they are provided as starter materials for exercises that you
 might want to have your students complete. Feel free to download and amend
 these files!
 
-The material in these files are also repackaged in the `R Shiny` app
+Much of the material in these files are also packaged in the `R Shiny` app
 `multinomial_app.R`.
