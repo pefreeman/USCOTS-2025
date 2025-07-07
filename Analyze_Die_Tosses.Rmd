@@ -7,58 +7,58 @@ author: "Peter E. Freeman - Carnegie Mellon University"
 The setting: you have completed an experiment in which you have tossed a
 die $k$ times and recorded how often each face was observed. For instance,
 perhaps you tossed the die $k = 24$ times and recorded the data
-$x = \{1,5,4,4,6,4\}$ (you rolled 1 once, 2 five times, etc.).
+$x = \{1,5,4,4,6,4\}$ (you rolled a $1$ once, a $2$ five times, etc.).
 Now you'd like to test the hypothesis that the coin is fair.
 
 In the following code chunk, we carry out Pearson's chi-square test, aka
-the chi-square goodness of fit test, at the level $\alpha = 0.05$.
+the chi-square goodness-of-fit test, at the level $\alpha = 0.05$.
 
 ```{r}
-X.obs <- c(1,5,4,4,6,4) # enter the observed data here
+X.obs <- c(1, 5, 4, 4, 6, 4) # enter the observed data here
 
 alpha <- 0.05
 m     <- length(X.obs)
-p     <- rep(1/m,m)
+p     <- rep(1/m, m)
 k     <- sum(X.obs)
 
-W     <- sum( (X.obs-k*p)^2/(k*p) )
+W     <- sum( (X.obs - k*p)^2 / (k*p) )
 
-cat("The observed value of chi-square is ",round(W,3),"\n")
-cat("The p-value is                      ",round(1-pchisq(W,m-1),5),"\n")
+cat("The observed value of chi-square is ", round(W, 3),"\n")
+cat("The p-value is                      ", round(1 - pchisq(W, m-1), 5),"\n")
 ```
 
-We find that the $p$-value is 0.624.
+We find that the $p$-value is $0.623$.
 
 What are the issues with using the chi-square goodness of fit test?
 
-1. It is an *approximate* test: the data are sampled from a multinomial
+1. It is an *approximate* test: the data are sampled according to a multinomial
 distribution and not a multivariate normal. An "exact" test would utilize
 the multinomial probability mass function. ("Exact" is in quotes because
 while the multinomial pmf is exactly the right distribution to use, we do
 have to apply simulations to estimate the $p$-value...)
 2. (Related to 1.) By convention, we should not apply the chi-square 
 goodness of fit test if the number of expected counts in each bin is
-less than 5. Here, the expected number of counts in each bin, under the null,
-is 4.
+less than $5$. Here, the expected number of counts in each bin, under the null,
+is $4$.
 
-Below we estimate the $p$-value by simulating 100,000 datasets under the null
+Below we estimate the $p$-value by simulating $100{,}000$ datasets under the null
 and recording the proportion for which the multinomial pmf value is less than
-the pmf value we observe. This simulation takes $\sim$ 1-10 CPU seconds on
+the pmf value we observe. This simulation takes $\sim 1-10$ CPU seconds on
 a typical computer.
 
 ```{r}
 set.seed(36236)
 num.sim <- 100000
 k       <- sum(X.obs)
-obs     <- dmultinom(X.obs,prob=p) # the pmf value for the observed data
-X       <- rmultinom(num.sim,k,p)
-a       <- apply(X,2,function(x,p){dmultinom(x,prob=p)},p=p)
-cat("The estimated p-value is            ",sum(a<=obs)/num.sim,"\n")
+obs     <- dmultinom(X.obs, prob = p) # the pmf value for the observed data
+X       <- rmultinom(num.sim, k, p)
+a       <- apply(X, 2, function(x,p){dmultinom(x, prob = p)}, p = p)
+cat("The estimated p-value is            ", sum(a <= obs)/num.sim,"\n")
 ```
 
 For this particular dataset, we estimate that the "true" $p$-value is
-0.563. But what is the uncertainty on this estimate? It is significantly
-different from 0.624? To answer that question, we can use the results of
-our simulation to construct, e.g., a 95\% confidence interval for the 
+$0.565$. But what is the uncertainty on this estimate? It is significantly
+different from $0.623$? To answer that question, we can use the results of
+our simulation to construct, e.g., a $95$% confidence interval for the 
 true $p$-value. We show how to do that in the file `CI_Multinomial.Rmd`.
 
