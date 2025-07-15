@@ -13,7 +13,7 @@ that the die is fair?
 true $p$-value? (Short answer: yes.)
 
 3. `P_Value_Uniformity.Rmd`: are the $p$-values that arise when we perform 
-the chi-square goodness of fit test and conduct multinomial simulations, 
+the chi-square goodness-of-fit test and conduct multinomial simulations, 
 under the null hypothesis that the die is fair, uniformly distributed (as
 we would expect them to be when the null hypothesis is correct)?
 
