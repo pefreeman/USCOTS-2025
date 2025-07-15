@@ -17,8 +17,8 @@ the chi-square goodness of fit test and conduct multinomial simulations,
 under the null hypothesis that the die is fair, uniformly distributed (as
 we would expect them to be when the null hypothesis is correct)?
 
-To be clear: none of these materials exist to "convince" you the instructor
-that multinomial simulations are superior to the chi-square goodness of fit
+To be clear: none of these materials exist to "convince" you, the instructor,
+that multinomial simulations are superior to the chi-square goodness-of-fit
 test; rather, they are provided as starter materials for exercises that you
 might want to have your students complete. Feel free to download and amend
 these files!
