@@ -62,3 +62,26 @@ different from $0.623$? To answer that question, we can use the results of
 our simulation to construct, e.g., a $95$% confidence interval for the 
 true $p$-value. We show how to do that in the file `CI_Multinomial.Rmd`.
 
+<hr>
+
+As an added bonus, we provide multinomial simulation code as rendered in 
+Python below. (Feel free to add it to your `quarto` document and test it out!)
+
+```
+import numpy as np
+from scipy.stats import multinomial
+
+XObs = np.array([1, 5, 4, 4, 6, 4])
+m    = len(XObs)
+k    = sum(XObs)
+p    = np.array([1.0/m] * m)  # assume equal probabilities
+
+def f(x):
+    return multinomial.pmf(x, k, p)
+
+pmfObs = f(XObs)  # the observed pmf value
+numSim = 100000   # the number of simulated datasets
+X      = multinomial.rvs(n = k, p = p, size = numSim, random_state = 36236)
+pmfSim = np.apply_along_axis(f, 1, X)        # the simulated pmf values
+print(np.sum(pmfSim < pmfObs) / len(pmfSim)) # the (estimated) p-value
+```
