@@ -64,9 +64,24 @@ true $p$-value. We show how to do that in the file `CI_Multinomial.Rmd`.
 
 <hr>
 
-As an added bonus, we provide multinomial simulation code as rendered in 
-Python below. (Feel free to add it to your `quarto` document and test it out!)
+As an added bonus, below we provide chi-square GoF test and multinomial 
+simulation code as rendered in Python. (Feel free to add it to your `quarto` 
+document and test it out!)
 
+The chi-square GoF test:
+```
+import numpy as np
+from scipy.stats import chi2
+
+XObs = np.array([1, 5, 4, 4, 6, 4])
+m    = len(XObs)
+k    = np.sum(XObs)
+p    = np.array([1.0/m] * m)
+W    = np.sum( (XObs - k*p)**2 / (k*p) )
+print(1 - chi2.cdf(W,m-1))
+```
+
+The multinomial simulation:
 ```
 import numpy as np
 from scipy.stats import multinomial
